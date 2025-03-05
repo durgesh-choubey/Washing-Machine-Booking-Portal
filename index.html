@@ -136,10 +136,65 @@
   <script>
     // Sample data of already booked slots (for simulation)
     const bookedSlots = [
-      { date: '2025-03-06', time: '9:00 AM - 10:00 AM' },
-      { date: '2025-03-06', time: '10:00 AM - 11:00 AM' },
-      { date: '2025-03-07', time: '1:00 PM - 2:00 PM' }
+      { date: '2025-03-06', time: '10:00 AM - 10:30 AM' },
+      { date: '2025-03-06', time: '11:00 AM - 11:30 AM' },
+      { date: '2025-03-07', time: '2:00 PM - 2:30 PM' }
     ];
+
+    // Time slots to be used as options in the dropdown
+    const allTimeSlots = [
+      '10:00 AM - 10:30 AM',
+      '10:30 AM - 11:00 AM',
+      '11:00 AM - 11:30 AM',
+      '11:30 AM - 12:00 PM',
+      '12:00 PM - 12:30 PM',
+      '12:30 PM - 1:00 PM',
+      '2:00 PM - 2:30 PM',
+      '2:30 PM - 3:00 PM',
+      '3:00 PM - 3:30 PM',
+      '3:30 PM - 4:00 PM',
+      '4:00 PM - 4:30 PM',
+      '4:30 PM - 5:00 PM'
+    ];
+
+    // Set the minimum date to today (prevents selecting past dates)
+    function setMinDate() {
+      const today = new Date();
+      const day = String(today.getDate()).padStart(2, '0');
+      const month = String(today.getMonth() + 1).padStart(2, '0'); // Month is 0-indexed
+      const year = today.getFullYear();
+      const minDate = `${year}-${month}-${day}`;
+      document.getElementById('date').setAttribute('min', minDate);
+    }
+
+    // Call setMinDate function on page load
+    setMinDate();
+
+    // Load available time slots based on selected date
+    document.getElementById('date').addEventListener('change', function () {
+      const selectedDate = this.value;
+
+      // Filter out the booked time slots for the selected date
+      const availableSlots = allTimeSlots.filter(timeSlot => !bookedSlots.some(slot => slot.date === selectedDate && slot.time === timeSlot));
+      
+      // Update the time dropdown with available slots
+      const timeSelect = document.getElementById('time');
+      timeSelect.innerHTML = ''; // Clear previous options
+
+      if (availableSlots.length > 0) {
+        availableSlots.forEach(function (timeSlot) {
+          const option = document.createElement('option');
+          option.value = timeSlot;
+          option.textContent = timeSlot;
+          timeSelect.appendChild(option);
+        });
+      } else {
+        const option = document.createElement('option');
+        option.disabled = true;
+        option.textContent = 'No slots available';
+        timeSelect.appendChild(option);
+      }
+    });
 
     // Form validation function
     function validateForm(event) {
@@ -153,7 +208,7 @@
       document.getElementById("formSuccess").textContent = '';
 
       let valid = true;
-      
+
       // Get form values
       const name = document.getElementById('name').value;
       const room = document.getElementById('room').value;
