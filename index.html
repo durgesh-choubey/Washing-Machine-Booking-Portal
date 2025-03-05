@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Washing Machine Booking Portal</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f9;
+      padding: 20px;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    h1 {
+      color: #333;
+      font-size: 3rem;
+    }
+
+    p {
+      color: #555;
+    }
+
+    .form-container {
+      max-width: 600px;
+      margin: 0 auto;
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+    }
+
+    label {
+      margin-top: 15px;
+      font-weight: bold;
+    }
+
+    input, select, button {
+      padding: 10px;
+      margin-top: 5px;
+      font-size: 1rem;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      background-color: #4CAF50;
+      color: white;
+      cursor: pointer;
+      margin-top: 20px;
+      font-size: 1.1rem;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 50px;
+      color: #888;
+    }
+
+    .error {
+      color: red;
+      font-size: 0.9rem;
+    }
+
+    .success {
+      color: green;
+      font-size: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Washing Machine Booking Portal</h1>
+    <p>Book your washing machine slot now!</p>
+  </header>
+
+  <section class="form-container">
+    <form id="bookingForm" action="https://docs.google.com/forms/d/e/1FAIpQLScdD1lE8u0w-pbs9dZmYq-eFy2U4kRWLl3f7iO5uaK-x5nTmOQ/viewform" method="GET" target="_blank">
+      <label for="name">Your Name:</label>
+      <input type="text" id="name" name="entry.1234567890" required>
+      <span id="nameError" class="error"></span>
+
+      <label for="room">Hostel Room Number:</label>
+      <input type="text" id="room" name="entry.9876543210" required>
+      <span id="roomError" class="error"></span>
+
+      <label for="date">Preferred Date:</label>
+      <input type="date" id="date" name="entry.1112131415" required>
+      <span id="dateError" class="error"></span>
+
+      <label for="time">Preferred Time Slot:</label>
+      <select id="time" name="entry.1617181920" required>
+        <option value="9:00 AM - 10:00 AM">9:00 AM - 10:00 AM</option>
+        <option value="10:00 AM - 11:00 AM">10:00 AM - 11:00 AM</option>
+        <option value="11:00 AM - 12:00 PM">11:00 AM - 12:00 PM</option>
+        <option value="12:00 PM - 1:00 PM">12:00 PM - 1:00 PM</option>
+        <option value="1:00 PM - 2:00 PM">1:00 PM - 2:00 PM</option>
+      </select>
+      <span id="timeError" class="error"></span>
+
+      <button type="submit">Book Now</button>
+      <span id="formSuccess" class="success"></span>
+    </form>
+  </section>
+
+  <footer>
+    <p>&copy; 2025 Washing Machine Booking Portal | All Rights Reserved</p>
+  </footer>
+
+  <script>
+    // Sample data of already booked slots (for simulation)
+    const bookedSlots = [
+      { date: '2025-03-06', time: '9:00 AM - 10:00 AM' },
+      { date: '2025-03-06', time: '10:00 AM - 11:00 AM' },
+      { date: '2025-03-07', time: '1:00 PM - 2:00 PM' }
+    ];
+
+    // Form validation function
+    function validateForm(event) {
+      event.preventDefault();
+
+      // Clear previous errors
+      document.getElementById("nameError").textContent = '';
+      document.getElementById("roomError").textContent = '';
+      document.getElementById("dateError").textContent = '';
+      document.getElementById("timeError").textContent = '';
+      document.getElementById("formSuccess").textContent = '';
+
+      let valid = true;
+      
+      // Get form values
+      const name = document.getElementById('name').value;
+      const room = document.getElementById('room').value;
+      const date = document.getElementById('date').value;
+      const time = document.getElementById('time').value;
+
+      // Validate Name
+      if (!name) {
+        document.getElementById('nameError').textContent = 'Name is required';
+        valid = false;
+      }
+
+      // Validate Room
+      if (!room) {
+        document.getElementById('roomError').textContent = 'Room number is required';
+        valid = false;
+      }
+
+      // Validate Date
+      if (!date) {
+        document.getElementById('dateError').textContent = 'Date is required';
+        valid = false;
+      }
+
+      // Validate Time
+      if (!time) {
+        document.getElementById('timeError').textContent = 'Time slot is required';
+        valid = false;
+      }
+
+      // Check for double booking (availability check)
+      const isSlotBooked = bookedSlots.some(slot => slot.date === date && slot.time === time);
+      if (isSlotBooked) {
+        document.getElementById('timeError').textContent = 'This time slot is already booked';
+        valid = false;
+      }
+
+      // If the form is valid, submit it
+      if (valid) {
+        document.getElementById('formSuccess').textContent = 'Booking successful!';
+        document.getElementById('bookingForm').submit();
+      }
+    }
+
+    // Attach event listener to form submission
+    document.getElementById('bookingForm').addEventListener('submit', validateForm);
+  </script>
+</body>
+</html>
